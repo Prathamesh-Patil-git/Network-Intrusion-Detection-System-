@@ -319,6 +319,102 @@ When you type 12340 in the Analyzer:
 
 ---
 
+## ❓ FAQ — Can I scan a URL or use it in real-time?
+
+### "Can I paste a URL and scan it?"
+
+**No.** This NIDS does **not** work with URLs or websites. It is fundamentally different from a web vulnerability scanner.
+
+Here's the key difference:
+
+| Tool Type | Input | What It Detects |
+|----------|-------|----------------|
+| **Web Scanner** (e.g., VirusTotal) | URL / website link | Malware on websites, phishing pages |
+| **This NIDS** | 41 numeric features from a network packet | Attack type in network traffic (DoS, Probe, R2L, U2R) |
+
+### What does this system actually analyze?
+
+This system analyzes **raw network connection data** — the kind of data captured by tools like `tcpdump`, `Wireshark`, or `Snort`. Each "sample" is **NOT a URL**, it's a **network packet record** with 41 measurements like:
+
+```
+duration = 0          ← connection lasted 0 seconds
+protocol_type = tcp   ← TCP protocol
+service = http        ← HTTP service
+src_bytes = 491       ← 491 bytes sent by source
+dst_bytes = 0         ← 0 bytes sent by destination
+flag = SF             ← connection status
+count = 2             ← 2 connections to same host in last 2 sec
+serror_rate = 0.0     ← no SYN error rate
+...and 33 more features
+```
+
+These numbers describe **how a network connection behaved**, not what website it visited.
+
+### How would this work in real-time (in the real world)?
+
+In a production deployment, the system would sit between your network and the internet, analyzing live traffic:
+
+```
+                    ┌──────────────────┐
+  Internet          │  Network Sniffer │         Your Network
+ ═══════════════════│  (tcpdump/Scapy) │═══════════════════════
+                    └────────┬─────────┘
+                             │ Captures packets
+                             ↓
+                    ┌──────────────────┐
+                    │ Feature Extractor│
+                    │ (extract 41      │
+                    │  features from   │
+                    │  each connection)│
+                    └────────┬─────────┘
+                             │ 41 numbers per connection
+                             ↓
+                    ┌──────────────────┐
+                    │  XGBoost Model   │
+                    │  (our trained    │
+                    │   NIDS model)    │
+                    └────────┬─────────┘
+                             │ "This is a DoS attack!"
+                             ↓
+                    ┌──────────────────┐
+                    │  Alert System    │
+                    │  (block IP,      │
+                    │   send alert)    │
+                    └──────────────────┘
+```
+
+**Step-by-step real-time flow:**
+
+1. **Capture** — A network sniffer (tcpdump, Scapy, or Zeek) captures every incoming/outgoing connection
+2. **Extract** — A feature extractor computes the 41 KDD features from the raw packet data (duration, bytes, protocol, error rates, etc.)
+3. **Predict** — The 41 features are sent to our XGBoost model's API (`/api/predict/single`)
+4. **Act** — If the model predicts an attack (DoS/Probe/R2L/U2R), an alert is triggered or the connection is blocked
+
+### So what does our project do?
+
+Our project is a **demonstration/proof-of-concept** that works on **pre-recorded data** (the KDD Cup 1999 dataset). Instead of capturing live packets, we:
+
+- Load ~125,000 pre-recorded network connections from a CSV file
+- Let users pick any sample by its row number (index) and see the model's prediction
+- This proves the model **works** and can classify attacks accurately
+
+> **In short:** The Sample Index in the UI = a row number in a pre-recorded dataset of network connections. It's not a URL. In the real world, these rows would be generated automatically by a packet sniffer watching your live network.
+
+### Could we add real-time capture?
+
+Yes, with additional tools. Here's what you'd need:
+
+| Component | Tool | Purpose |
+|----------|------|---------|
+| Packet capture | `Scapy` / `pyshark` (Python) | Sniff live network packets |
+| Feature extraction | Custom Python script | Convert raw packets → 41 KDD features |
+| Prediction | Our existing `/api/predict/single` | Classify the connection |
+| Alert | Email / SMS / Dashboard | Notify admin of attacks |
+
+This is beyond the scope of this academic project but is exactly how enterprise NIDS (like Snort, Suricata) work — they just use different ML models.
+
+---
+
 ## 🔧 How Each Module Works
 
 ### Backend Modules (`backend/`)
