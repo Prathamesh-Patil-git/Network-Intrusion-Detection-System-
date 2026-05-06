@@ -204,9 +204,7 @@ python train.py
 
 ---
 
-## 👥 Team
 
-> SY IoT — Semester 4 ML Mini Project
 
 ---
 
