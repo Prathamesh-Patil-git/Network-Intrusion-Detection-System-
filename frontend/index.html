@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-Powered Network Intrusion Detection System with real-time attack classification and risk analysis using XGBoost machine learning.">
+    <title>NIDS - AI Network Intrusion Detection System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-brand">
+            <div class="nav-logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="url(#logo-grad)"/>
+                    <path d="M16 6L8 12v8l8 6 8-6v-8L16 6z" stroke="white" stroke-width="1.5" fill="none"/>
+                    <circle cx="16" cy="16" r="3" fill="white" opacity="0.8"/>
+                    <defs><linearGradient id="logo-grad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#10b981"/><stop offset="1" stop-color="#059669"/></linearGradient></defs>
+                </svg>
+            </div>
+            <span class="nav-title">NIDS<span class="nav-dot">.</span>AI</span>
+        </div>
+        <div class="nav-links">
+            <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+            <a href="#analyzer" class="nav-link" data-section="analyzer">Analyzer</a>
+            <a href="#batch" class="nav-link" data-section="batch">Batch Scan</a>
+            <a href="#metrics" class="nav-link" data-section="metrics">Metrics</a>
+        </div>
+        <div class="nav-status">
+            <div class="status-dot"></div>
+            <span class="status-text">Model Active</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- ============================================ -->
+        <!-- SECTION: Dashboard -->
+        <!-- ============================================ -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1 class="section-title">
+                    <span class="title-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    </span>
+                    Threat Dashboard
+                </h1>
+                <p class="section-subtitle">Real-time overview of network intrusion detection and risk analysis</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card stat-card-primary">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-total">--</span>
+                        <span class="stat-label">Total Samples</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-success">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-accuracy">--</span>
+                        <span class="stat-label">Model Accuracy</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-warning">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4.5c-.77-.833-2.694-.833-3.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-classes">--</span>
+                        <span class="stat-label">Attack Classes</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-card-danger">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="stat-features">--</span>
+                        <span class="stat-label">Features</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Attack Type Distribution</h3>
+                        <div class="chart-badge">Live Data</div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="attackChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3 class="chart-title">Risk Level Overview</h3>
+                        <div class="chart-badge">Analysis</div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="riskChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3 class="actions-title">Quick Actions</h3>
+                <div class="actions-grid">
+                    <button class="action-btn" onclick="switchSection('analyzer')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        Analyze Single Sample
+                    </button>
+                    <button class="action-btn" onclick="switchSection('batch')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                        Run Batch Scan
+                    </button>
+                    <button class="action-btn" onclick="switchSection('metrics')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                        View Model Metrics
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION: Single Analyzer -->
+        <!-- ============================================ -->
+        <section id="analyzer" class="section">
+            <div class="section-header">
+                <h1 class="section-title">
+                    <span class="title-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </span>
+                    Single Sample Analyzer
+                </h1>
+                <p class="section-subtitle">Deep-dive analysis of individual network traffic samples</p>
+            </div>
+
+            <div class="analyzer-layout">
+                <!-- Controls Panel -->
+                <div class="analyzer-controls">
+                    <div class="control-card">
+                        <h3 class="control-title">Sample Selection</h3>
+                        <div class="input-group">
+                            <label for="sampleIndex" class="input-label">Sample Index</label>
+                            <input type="number" id="sampleIndex" class="input-field" value="0" min="0">
+                        </div>
+                        <div class="btn-row">
+                            <button class="btn btn-primary" id="predictBtn" onclick="predictSingle()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Analyze
+                            </button>
+                            <button class="btn btn-secondary" id="randomBtn" onclick="predictRandom()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="1" width="8" height="8" rx="1"/><rect x="1" y="15" width="8" height="8" rx="1"/><circle cx="5" cy="5" r="1"/><circle cx="5" cy="19" r="1"/></svg>
+                                Random
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="analyzer-results" id="analyzerResults">
+                    <div class="empty-state" id="analyzerEmpty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                        <p>Select a sample and click <strong>Analyze</strong> to begin</p>
+                    </div>
+                    <div class="result-content" id="resultContent" style="display:none;">
+                        <!-- Top Row: Attack + Risk -->
+                        <div class="result-header-grid">
+                            <div class="result-box">
+                                <span class="result-label">Predicted Attack</span>
+                                <span class="result-value" id="resPredicted">--</span>
+                            </div>
+                            <div class="result-box">
+                                <span class="result-label">Actual Attack</span>
+                                <span class="result-value" id="resActual">--</span>
+                            </div>
+                            <div class="result-box result-box-risk" id="riskBox">
+                                <span class="result-label">Risk Level</span>
+                                <span class="result-value result-risk" id="resRisk">--</span>
+                            </div>
+                            <div class="result-box" id="correctBox">
+                                <span class="result-label">Prediction</span>
+                                <span class="result-value" id="resCorrect">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Risk Gauge -->
+                        <div class="risk-gauge-container">
+                            <h3 class="gauge-title">Threat Level Indicator</h3>
+                            <div class="risk-gauge">
+                                <div class="gauge-track">
+                                    <div class="gauge-fill" id="gaugeFill"></div>
+                                </div>
+                                <div class="gauge-labels">
+                                    <span>Low</span>
+                                    <span>Medium</span>
+                                    <span>High</span>
+                                    <span>Critical</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Features Table -->
+                        <div class="features-card">
+                            <h3 class="features-title">Top Features</h3>
+                            <div class="features-table" id="featuresTable"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION: Batch Scan -->
+        <!-- ============================================ -->
+        <section id="batch" class="section">
+            <div class="section-header">
+                <h1 class="section-title">
+                    <span class="title-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    </span>
+                    Batch Threat Scanner
+                </h1>
+                <p class="section-subtitle">Scan multiple network traffic samples simultaneously</p>
+            </div>
+
+            <div class="batch-controls">
+                <div class="control-card">
+                    <div class="batch-inputs">
+                        <div class="input-group">
+                            <label for="batchCount" class="input-label">Number of Samples</label>
+                            <input type="range" id="batchCount" min="5" max="100" value="20" oninput="document.getElementById('batchVal').textContent = this.value">
+                            <span class="range-value" id="batchVal">20</span>
+                        </div>
+                        <div class="input-group">
+                            <label for="batchStart" class="input-label">Start Index</label>
+                            <input type="number" id="batchStart" class="input-field" value="0" min="0">
+                        </div>
+                        <button class="btn btn-primary btn-lg" id="batchBtn" onclick="runBatch()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Run Batch Scan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch Summary -->
+            <div class="batch-summary" id="batchSummary" style="display:none;">
+                <div class="summary-cards">
+                    <div class="summary-card summary-low">
+                        <span class="summary-count" id="sumLow">0</span>
+                        <span class="summary-label">Low Risk</span>
+                    </div>
+                    <div class="summary-card summary-medium">
+                        <span class="summary-count" id="sumMedium">0</span>
+                        <span class="summary-label">Medium Risk</span>
+                    </div>
+                    <div class="summary-card summary-high">
+                        <span class="summary-count" id="sumHigh">0</span>
+                        <span class="summary-label">High Risk</span>
+                    </div>
+                    <div class="summary-card summary-critical">
+                        <span class="summary-count" id="sumCritical">0</span>
+                        <span class="summary-label">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Batch Table -->
+            <div class="batch-table-container" id="batchTableContainer" style="display:none;">
+                <div class="table-wrapper">
+                    <table class="data-table" id="batchTable">
+                        <thead>
+                            <tr>
+                                <th>Index</th>
+                                <th>Predicted Attack</th>
+                                <th>Actual Attack</th>
+                                <th>Risk Level</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="batchBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================ -->
+        <!-- SECTION: Metrics -->
+        <!-- ============================================ -->
+        <section id="metrics" class="section">
+            <div class="section-header">
+                <h1 class="section-title">
+                    <span class="title-icon">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    </span>
+                    Model Performance Metrics
+                </h1>
+                <p class="section-subtitle">Comprehensive evaluation of the XGBoost intrusion detection model</p>
+            </div>
+
+            <!-- Accuracy Hero -->
+            <div class="accuracy-hero" id="accuracyHero">
+                <div class="accuracy-ring">
+                    <svg viewBox="0 0 120 120" class="ring-svg">
+                        <circle cx="60" cy="60" r="52" class="ring-bg"/>
+                        <circle cx="60" cy="60" r="52" class="ring-fill" id="accuracyRing"/>
+                    </svg>
+                    <div class="ring-text">
+                        <span class="ring-value" id="metricsAccuracy">--</span>
+                        <span class="ring-label">Accuracy</span>
+                    </div>
+                </div>
+                <div class="accuracy-info">
+                    <h2>XGBoost Classifier</h2>
+                    <p>Trained on <span id="metricsTestSamples">--</span> test samples with stratified splitting.</p>
+                    <div class="model-specs">
+                        <span class="spec-tag">300 Estimators</span>
+                        <span class="spec-tag">Max Depth: 8</span>
+                        <span class="spec-tag">LR: 0.1</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Per-Class Metrics -->
+            <div class="metrics-table-card">
+                <h3 class="metrics-title">Per-Class Performance</h3>
+                <div class="table-wrapper">
+                    <table class="data-table" id="metricsTable">
+                        <thead>
+                            <tr>
+                                <th>Class</th>
+                                <th>Precision</th>
+                                <th>Recall</th>
+                                <th>F1-Score</th>
+                                <th>Support</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metricsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Confusion Matrix -->
+            <div class="confusion-card">
+                <h3 class="metrics-title">Confusion Matrix Heatmap</h3>
+                <div class="confusion-container" id="confusionMatrix"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader">
+            <div class="loader-ring"></div>
+            <span class="loader-text">Analyzing...</span>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

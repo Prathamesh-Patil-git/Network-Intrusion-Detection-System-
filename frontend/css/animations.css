@@ -1,0 +1,146 @@
+/* ============================================
+   NIDS.AI — Micro-animations & Transitions
+   ============================================ */
+
+/* --- Staggered entrance for stat cards --- */
+.stat-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggerIn 0.5s ease forwards;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes staggerIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* --- Chart card entrance --- */
+.chart-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggerIn 0.6s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.chart-card:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+
+/* --- Quick actions entrance --- */
+.quick-actions {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: staggerIn 0.6s ease forwards;
+    animation-delay: 0.5s;
+}
+
+
+/* --- Table row entrance --- */
+.data-table tbody tr {
+    opacity: 0;
+    animation: rowSlide 0.3s ease forwards;
+}
+
+@keyframes rowSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* --- Summary card entrance --- */
+.summary-card {
+    opacity: 0;
+    transform: scale(0.9);
+    animation: popIn 0.4s ease forwards;
+}
+
+.summary-card:nth-child(1) { animation-delay: 0.05s; }
+.summary-card:nth-child(2) { animation-delay: 0.1s; }
+.summary-card:nth-child(3) { animation-delay: 0.15s; }
+.summary-card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes popIn {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* --- Result content entrance --- */
+.result-content {
+    animation: fadeSlideIn 0.5s ease;
+}
+
+
+/* --- Feature row entrance --- */
+.feature-row {
+    opacity: 0;
+    animation: rowSlide 0.25s ease forwards;
+}
+
+
+/* --- Button press effect --- */
+.btn:active {
+    transform: scale(0.97);
+}
+
+
+/* --- Hover glow on cards (light theme) --- */
+.stat-card::after,
+.chart-card::after,
+.control-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(16, 185, 129, 0.04), transparent 60%);
+    transition: opacity var(--transition-base);
+    pointer-events: none;
+}
+
+.stat-card:hover::after,
+.chart-card:hover::after,
+.control-card:hover::after {
+    opacity: 1;
+}
+
+
+/* --- Number count-up (JS driven) --- */
+.counting {
+    transition: all 0.05s ease;
+}
+
+
+/* --- Shimmer loading placeholder --- */
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        #f1f5f9 25%,
+        #e2e8f0 37%,
+        #f1f5f9 63%
+    );
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
