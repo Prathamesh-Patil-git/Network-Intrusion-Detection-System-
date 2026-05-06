@@ -126,23 +126,35 @@ Mini_Project/
 
 ## 🚀 How to Run
 
-### 1. Install Dependencies
+### 1. Create & Activate Virtual Environment
+
+```bash
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# macOS/Linux
+source venv/bin/activate
+```
+
+### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Start the Server
+### 3. Start the Server
 
 ```bash
 python server.py
 ```
 
-### 3. Open the App
+### 4. Open the App
 
 Navigate to **http://127.0.0.1:5000** in your browser.
 
-### 4. (Optional) Retrain the Model
+### 5. (Optional) Retrain the Model
 
 ```bash
 cd backend
